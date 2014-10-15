@@ -2,6 +2,8 @@ package com.example.flashcard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
+
 
 public class FlashCardDatabase implements Serializable{
 	
@@ -54,9 +56,24 @@ public class FlashCardDatabase implements Serializable{
 	public boolean isEmpty() {
 		return mDatabase.isEmpty();
 	}
-
+	
+	public FlashCard getCard(UUID id) {
+		for (FlashCard card : mDatabase) {
+			if(card.getId().equals(id)) {
+				return card;
+			}
+		}
+		
+		return null;
+	}
+	
+	public FlashCard get(int pos) {
+		return mDatabase.get(pos);
+	}
+	
 	public String toString() {
 		return "mDatabase has" + mDatabase.size() + " elements: ";
 	}
+	
 
 }

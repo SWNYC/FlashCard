@@ -33,6 +33,9 @@
         <activity
             android:name=".ShowCardsActivity"
             android:label="@string/app_name" />
+        <activity
+            android:name=".CardPagerActivity"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

@@ -89,7 +89,7 @@ public class CardsChooserListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String fileName = (String) getListView().getItemAtPosition(position);
-		Intent i = new Intent(getActivity(), ShowCardsActivity.class);
+		Intent i = new Intent(getActivity(), CardPagerActivity.class);
 		i.putExtra(EXTRA_FILENAME, fileName);
 		startActivity(i);
 	}
