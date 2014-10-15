@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 public class ShowCardsFragment extends Fragment {
 	private static final String TAG = "SHOWCARDS";
-	private TextView mQuestionTextView;
-	private TextView mAnswerTextView;
+	private TextView mTextView;
 	private Button mShowAnswerButton;
 	public static final String EXTRA_CARD_ID = "com.example.flashcards.card_id";
 	public static final String EXTRA_CARD_DATABASE = "com.example.flashcards.card_database";
@@ -34,21 +33,10 @@ public class ShowCardsFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		View v = inflator
-				.inflate(R.layout.show_cards_fragment, parent, false);
+				.inflate(R.layout.card_fragment, parent, false);
 
-		mQuestionTextView = (TextView) v.findViewById(R.id.questionTextView);
-		mAnswerTextView = (TextView) v.findViewById(R.id.answerTextView);
-		
-		mShowAnswerButton = (Button) v.findViewById(R.id.showAnswerButton);
-		mShowAnswerButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				mAnswerTextView.setText(card.getAnswer());
-			}
-		});
-		
-		mQuestionTextView.setText(card.getQuestion());
+		mTextView = (TextView) v.findViewById(R.id.textView);
+		mTextView.setText(card.getQuestion());
 		
 		return v;
 	}

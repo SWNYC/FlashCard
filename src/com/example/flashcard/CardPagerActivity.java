@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -20,9 +21,8 @@ public class CardPagerActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mViewPager = new ViewPager(this);
-		mViewPager.setId(R.id.viewPager);
-		setContentView(mViewPager);
+		setContentView(R.layout.card_pager_fragment);
+		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 		
 		mFileName = (String) getIntent()
 				.getSerializableExtra(CardsChooserListFragment.EXTRA_FILENAME);
@@ -33,8 +33,9 @@ public class CardPagerActivity extends FragmentActivity {
 		FragmentManager fm = getSupportFragmentManager();
 		
 		Log.d(TAG, "getSupportFragmentManager ok");
+		
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-			
+
 			@Override
 			public int getCount() {
 				return mCardDatabase.getSize();
@@ -69,7 +70,11 @@ public class CardPagerActivity extends FragmentActivity {
 				}
 			}
 		});
+		ShowCardsButtonBarFragment buttonBar = new ShowCardsButtonBarFragment();
 		
+		FragmentTransaction transaction = fm.beginTransaction();
+		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
+		transaction.commit();
 		mViewPager.setCurrentItem(1);
 
 	}
