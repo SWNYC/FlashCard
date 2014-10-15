@@ -66,25 +66,12 @@
         android:gravity="center"
         android:orientation="horizontal" >
 
-        <ImageButton
-            android:id="@+id/previousButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/previous_button"
-            android:src="@drawable/arrow_left" />
-
         <Button
             android:id="@+id/showAnswerButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/show_answer_button" />
 
-        <ImageButton
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/next_button"
-            android:src="@drawable/arrow_right" />
     </LinearLayout>
 
 </LinearLayout>

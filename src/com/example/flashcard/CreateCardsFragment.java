@@ -101,6 +101,9 @@ public class CreateCardsFragment extends Fragment {
 								mAnswerEditText.getText().toString());
 						mDatabase.replace(mCurrentCard, replacementCard);
 					}
+					setNewCard();
+					Toast.makeText(getActivity(), R.string.add_card_confirmation,
+							Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(getActivity(), R.string.empty_fields_toast,
 							Toast.LENGTH_SHORT).show();
@@ -114,9 +117,7 @@ public class CreateCardsFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				mQuestionEditText.setText("");
-				mAnswerEditText.setText("");
-				mCurrentCard = new FlashCard("!New", "");
+				setNewCard();
 			}
 		});
 
@@ -171,5 +172,11 @@ public class CreateCardsFragment extends Fragment {
 		for (String file: getActivity().fileList()) {
 			Log.d(TAG, file);
 		}
+	}
+	
+	private void setNewCard(){
+		mQuestionEditText.setText("");
+		mAnswerEditText.setText("");
+		mCurrentCard = new FlashCard("!New", "");
 	}
 }

@@ -2,7 +2,6 @@ package com.example.flashcard;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.UUID;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,8 +41,8 @@ public class CardPagerActivity extends FragmentActivity {
 			}
 			
 			@Override
-			public Fragment getItem(int arg0) {
-				FlashCard card = mCardDatabase.get(arg0);
+			public Fragment getItem(int pos) {
+				FlashCard card = mCardDatabase.get(pos);
 				return ShowCardsFragment.newInstance(card.getId(), mCardDatabase);
 			}
 		});
@@ -59,18 +58,19 @@ public class CardPagerActivity extends FragmentActivity {
 			}
 			
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				
+			public void onPageScrollStateChanged(int state) {
+				if (state == ViewPager.SCROLL_STATE_IDLE) {
+					final int lastPosition = mViewPager.getAdapter().getCount()-1;
+					if (mViewPager.getCurrentItem() == lastPosition) {
+						mViewPager.setCurrentItem(1, false);
+					} else if (mViewPager.getCurrentItem() == 0) {
+						mViewPager.setCurrentItem(lastPosition -1, false);
+					}
+				}
 			}
 		});
 		
-		UUID cardID = (UUID)getIntent().getSerializableExtra(ShowCardsFragment.EXTRA_CARD_ID);
-		for(int i = 0; i < mCardDatabase.getSize(); i++) {
-			if (mCardDatabase.get(i).getId().equals(cardID)) {
-				mViewPager.setCurrentItem(i);
-				break;
-			}
-		}
+		mViewPager.setCurrentItem(1);
 
 	}
 	
@@ -94,6 +94,9 @@ public class CardPagerActivity extends FragmentActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		database.getArrayList().add(database.get(0));
+		database.getArrayList().add(0,database.get(database.getSize()-2));
 		
 		return database;
 	}

@@ -52,17 +52,20 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_fragment=0x7f030000;
-        public static final int create_cards_fragment=0x7f030001;
-        public static final int file_list_item=0x7f030002;
-        public static final int menu_fragment=0x7f030003;
-        public static final int save_file_dialog=0x7f030004;
-        public static final int show_cards_fragment=0x7f030005;
+        public static final int button_bar_fragment=0x7f030001;
+        public static final int card_fragment=0x7f030002;
+        public static final int create_cards_fragment=0x7f030003;
+        public static final int file_list_item=0x7f030004;
+        public static final int menu_fragment=0x7f030005;
+        public static final int save_file_dialog=0x7f030006;
+        public static final int show_cards_fragment=0x7f030007;
     }
     public static final class menu {
         public static final int file_list_item_context=0x7f090000;
     }
     public static final class string {
         public static final int add_button=0x7f070007;
+        public static final int add_card_confirmation=0x7f070019;
         public static final int answer=0x7f070005;
         public static final int answer_hint=0x7f07000f;
         public static final int app_name=0x7f070000;
@@ -71,7 +74,7 @@ public final class R {
         public static final int delete_dialog_multiple=0x7f070015;
         public static final int delete_dialog_single=0x7f070016;
         public static final int delete_file=0x7f070013;
-        public static final int duplicate_file_name=0x7f070019;
+        public static final int duplicate_file_name=0x7f07001a;
         public static final int empty_database=0x7f070011;
         public static final int empty_fields_toast=0x7f070010;
         public static final int main_menu=0x7f070001;
