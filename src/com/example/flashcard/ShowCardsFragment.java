@@ -29,7 +29,7 @@ public class ShowCardsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflator, ViewGroup parent,
 			Bundle savedInstanceState) {
 
-		View v = inflator.inflate(R.layout.card_fragment, parent, false);
+		View v = inflator.inflate(R.layout.show_card_fragment, parent, false);
 
 		mTextView = (TextView) v.findViewById(R.id.textView);
 		mTextView.setText(card.getQuestion());
@@ -45,8 +45,15 @@ public class ShowCardsFragment extends Fragment {
 
 		ShowCardsFragment fragment = new ShowCardsFragment();
 		fragment.setArguments(args);
-
+		
 		return fragment;
 	}
+	
+	public void showAnswer(){
+		mTextView.setText(card.getAnswer());
+	}
 
+	public void resetQuestion(){
+		mTextView.setText(card.getQuestion());
+	}
 }

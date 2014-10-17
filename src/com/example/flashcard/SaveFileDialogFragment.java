@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -19,6 +18,23 @@ public class SaveFileDialogFragment extends DialogFragment {
 	public static final String EXTRA_FILENAME = "com.example.flashcard.filename";
 	private String mFileName;
 	private EditText mFileNameEditText;
+
+	public interface SaveFileDialogListener {
+		public void onDialogPositiveClick(String fileName);
+	}
+
+	SaveFileDialogListener mListener;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mListener = (SaveFileDialogListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement SaveFileDialogListener");
+		}
+	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -38,14 +54,17 @@ public class SaveFileDialogFragment extends DialogFragment {
 									int which) {
 								mFileName = mFileNameEditText.getText()
 										.toString();
-								
+
 								String[] fileNames = getActivity().fileList();
-								ArrayList<String> fileList = new ArrayList<String>(Arrays.asList(fileNames));
-								
+								ArrayList<String> fileList = new ArrayList<String>(
+										Arrays.asList(fileNames));
+
 								if (fileList.contains(mFileName)) {
-									Toast.makeText(getActivity(), R.string.duplicate_file_name, Toast.LENGTH_SHORT).show();
+									Toast.makeText(getActivity(),
+											R.string.duplicate_file_name,
+											Toast.LENGTH_SHORT).show();
 								} else {
-									sendResult(Activity.RESULT_OK);
+									mListener.onDialogPositiveClick(mFileName);
 								}
 							}
 						})
@@ -63,15 +82,4 @@ public class SaveFileDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 
-	private void sendResult(int resultCode) {
-		if (getTargetFragment() == null) {
-			return;
-		}
-
-		Intent i = new Intent();
-		i.putExtra(EXTRA_FILENAME, mFileName);
-
-		getTargetFragment().onActivityResult(getTargetRequestCode(),
-				resultCode, i);
-	}
 }

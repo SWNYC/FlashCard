@@ -36,57 +36,59 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int addButton=0x7f060007;
-        public static final int answerEditText=0x7f060005;
-        public static final int answerTextView=0x7f060010;
-        public static final int buttonBarFragmentContainer=0x7f060003;
-        public static final int create_cards_Button=0x7f06000c;
-        public static final int deleteFileMenuItem=0x7f060011;
-        public static final int fileNameEditText=0x7f06000d;
+        public static final int CreateCardAnswerEditText=0x7f060006;
+        public static final int CreateCardQuestionEditText=0x7f060005;
+        public static final int addCardButton=0x7f060003;
+        public static final int answerTextView=0x7f06000d;
+        public static final int buttonBarFragmentContainer=0x7f060002;
+        public static final int create_cards_Button=0x7f060008;
+        public static final int deleteFileMenuItem=0x7f06000f;
+        public static final int fileNameEditText=0x7f060009;
         public static final int fragmentContainer=0x7f060001;
-        public static final int newButton=0x7f060009;
-        public static final int nextButton=0x7f06000a;
-        public static final int open_cards_Button=0x7f06000b;
-        public static final int previousButton=0x7f060006;
-        public static final int questionEditText=0x7f060004;
-        public static final int questionTextView=0x7f06000f;
-        public static final int saveButton=0x7f060008;
-        public static final int showAnswerButton=0x7f06000e;
-        public static final int textView=0x7f060002;
+        public static final int menu_item_create_cards=0x7f06000e;
+        public static final int open_cards_Button=0x7f060007;
+        public static final int questionTextView=0x7f06000c;
+        public static final int saveCardsButton=0x7f060004;
+        public static final int showAnswerButton=0x7f06000b;
+        public static final int textView=0x7f06000a;
         public static final int viewPager=0x7f060000;
     }
     public static final class layout {
         public static final int activity_fragment=0x7f030000;
-        public static final int card_fragment=0x7f030001;
-        public static final int card_pager_fragment=0x7f030002;
+        public static final int card_pager_fragment=0x7f030001;
+        public static final int create_cards_button_bar_fragment=0x7f030002;
         public static final int create_cards_fragment=0x7f030003;
         public static final int file_list_item=0x7f030004;
         public static final int menu_fragment=0x7f030005;
         public static final int save_file_dialog=0x7f030006;
-        public static final int show_cards_button_bar_fragment=0x7f030007;
-        public static final int unused_fragment_for_reference=0x7f030008;
+        public static final int show_card_fragment=0x7f030007;
+        public static final int show_cards_button_bar_fragment=0x7f030008;
+        public static final int unused_fragment_for_reference=0x7f030009;
     }
     public static final class menu {
-        public static final int file_list_item_context=0x7f090000;
+        public static final int cards_chooser_options=0x7f090000;
+        public static final int file_list_item_context=0x7f090001;
     }
     public static final class string {
         public static final int add_button=0x7f070007;
-        public static final int add_card_confirmation=0x7f070019;
+        public static final int add_card_button=0x7f070013;
+        public static final int add_card_confirmation=0x7f07001a;
         public static final int answer=0x7f070005;
         public static final int answer_hint=0x7f07000f;
         public static final int app_name=0x7f070000;
         public static final int cancel_dialog_button=0x7f07000c;
         public static final int create_cards_button=0x7f070003;
-        public static final int delete_dialog_multiple=0x7f070015;
-        public static final int delete_dialog_single=0x7f070016;
-        public static final int delete_file=0x7f070013;
-        public static final int duplicate_file_name=0x7f07001a;
+        public static final int delete_dialog_multiple=0x7f070016;
+        public static final int delete_dialog_single=0x7f070017;
+        public static final int delete_file=0x7f070014;
+        public static final int duplicate_file_name=0x7f07001b;
         public static final int empty_database=0x7f070011;
         public static final int empty_fields_toast=0x7f070010;
         public static final int main_menu=0x7f070001;
         public static final int new_button=0x7f07000d;
+        public static final int new_cards=0x7f07001c;
         public static final int next_button=0x7f070008;
-        public static final int no=0x7f070018;
+        public static final int no=0x7f070019;
         public static final int open_cards_button=0x7f070002;
         public static final int previous_button=0x7f070006;
         public static final int question=0x7f070004;
@@ -94,9 +96,9 @@ public final class R {
         public static final int save_button=0x7f07000b;
         public static final int save_dialog=0x7f070009;
         public static final int save_dialog_hint=0x7f07000a;
-        public static final int saving_empty_database=0x7f070014;
+        public static final int saving_empty_database=0x7f070015;
         public static final int show_answer_button=0x7f070012;
-        public static final int yes=0x7f070017;
+        public static final int yes=0x7f070018;
     }
     public static final class style {
         /** 

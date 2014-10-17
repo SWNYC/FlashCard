@@ -40,7 +40,7 @@ public class MenuFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), CreateCardsActivity.class);
+				Intent i = new Intent(getActivity(), CreateCardsPagerActivity.class);
 				startActivity(i);
 			}
 		});

@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView.FindListener;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -29,6 +28,7 @@ public class CardsChooserListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.app_name);
 
 		mFileNames = getActivity().fileList();
@@ -62,7 +62,6 @@ public class CardsChooserListFragment extends ListFragment {
 				return true;
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				if (item.getItemId() == R.id.deleteFileMenuItem) {
@@ -89,7 +88,7 @@ public class CardsChooserListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String fileName = (String) getListView().getItemAtPosition(position);
-		Intent i = new Intent(getActivity(), CardPagerActivity.class);
+		Intent i = new Intent(getActivity(), ShowCardPagerActivity.class);
 		i.putExtra(EXTRA_FILENAME, fileName);
 		startActivity(i);
 	}
@@ -103,6 +102,7 @@ public class CardsChooserListFragment extends ListFragment {
 		if (requestCode == REQUEST_CONFIRM_DELETE) {
 			mConfirmDelete = (Boolean) data
 					.getSerializableExtra(DeleteFilesDialogFragment.EXTRA_CONFIRM);
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
 			if (mConfirmDelete) {
 				for (int i = adapter.getCount() - 1; i >= 0; i--) {
@@ -114,6 +114,24 @@ public class CardsChooserListFragment extends ListFragment {
 			}
 			adapter.notifyDataSetChanged();
 			mActionMode.finish();
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.cards_chooser_options, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_item_create_cards:
+			Intent i = new Intent(getActivity(), CreateCardsPagerActivity.class);
+			startActivity(i);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

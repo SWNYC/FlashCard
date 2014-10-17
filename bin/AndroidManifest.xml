@@ -23,18 +23,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateCardsActivity"
-            android:label="@string/app_name" 
-            android:windowSoftInputMode="adjustPan"
-            />
-        <activity
             android:name=".CardsChooserActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".ShowCardsActivity"
+            android:name=".ShowCardPagerActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".CardPagerActivity"
+            android:name=".CreateCardsPagerActivity"
             android:label="@string/app_name" />
     </application>
 

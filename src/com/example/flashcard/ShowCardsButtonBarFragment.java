@@ -1,5 +1,6 @@
 package com.example.flashcard;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,11 @@ import android.widget.Button;
 
 public class ShowCardsButtonBarFragment extends Fragment {
 	private Button showAnswerButton;
+	OnShowAnswerButtonClickedListener mCallback;
+
+	public interface OnShowAnswerButtonClickedListener {
+		public void onButtonClicked();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflator, ViewGroup parent,
@@ -23,11 +29,23 @@ public class ShowCardsButtonBarFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				mCallback.onButtonClicked();
 			}
 		});
 
 		return v;
 	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mCallback = (OnShowAnswerButtonClickedListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnShowAnswerButtonClickedListener");
+		}
+	}
+
 }

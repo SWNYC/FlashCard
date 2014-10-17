@@ -20,6 +20,7 @@
 	<string name="empty_fields_toast">Please enter a question and answer.</string>
 	<string name="empty_database">No previously saved cards.</string>
 	<string name="show_answer_button">Show Answer</string>
+	<string name="add_card_button">Add</string>
 	<string name="delete_file">Delete file</string>
 	<string name="saving_empty_database">No cards to save</string>
 	<string name="delete_dialog_multiple">Are you sure you want to delete these files?</string>
@@ -28,4 +29,5 @@
 	<string name="no">No</string>
 	<string name="add_card_confirmation">Card added</string>
 	<string name="duplicate_file_name">A file already exists with that name. Please enter a different name.</string>
+	<string name="new_cards">New Cards</string>
 </resources>

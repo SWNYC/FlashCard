@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class FlashCard implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5534195328137787016L;
 	private String question;
 	private String answer;
 	private UUID mId;
@@ -35,7 +39,7 @@ public class FlashCard implements Serializable {
 	}
 	
 	public String toString() {
-		return "FlashCard - Question:" + question + "/ Answer: " + answer;
+		return "FlashCard - Q: " + question + " / A: " + answer;
 	}
 
 }
