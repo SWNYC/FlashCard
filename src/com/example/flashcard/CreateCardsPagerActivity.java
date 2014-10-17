@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.util.Iterator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +25,7 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	private FlashCardDatabase mCardDatabase;
 	private CreateCardsFragment mCardFrag;
 	private SparseIntArray pageIndexTracker = new SparseIntArray();
+	public static final String EXTRA_FILENAME = "com.example.flashcard.createcards_filename";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +151,10 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		}
 		
 		saveToFile(fileName);
+		
+		Intent data = new Intent();
+		data.putExtra(EXTRA_FILENAME, fileName);
+		setResult(RESULT_OK, data);
 	}
 
 	private void saveToFile(String fileName) {

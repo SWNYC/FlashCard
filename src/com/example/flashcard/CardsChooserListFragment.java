@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +21,12 @@ import android.widget.ListView;
 public class CardsChooserListFragment extends ListFragment {
 
 	public static final String EXTRA_FILENAME = "com.example.flashcard.filename";
-	private static final int REQUEST_CONFIRM_DELETE = 0;
+	static final int REQUEST_CONFIRM_DELETE = 0;
+	static final int REQUEST_FILENAME = 1;
 	private String[] mFileNames;
 	private boolean mConfirmDelete = false;
 	private ActionMode mActionMode;
+	public static final String TAG = "CHOOSE";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,8 @@ public class CardsChooserListFragment extends ListFragment {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				if (item.getItemId() == R.id.deleteFileMenuItem) {
-
+					//TODO
+					//get item count here
 					mActionMode = mode;
 					DeleteFilesDialogFragment newFragment = new DeleteFilesDialogFragment();
 					newFragment.setTargetFragment(
@@ -93,16 +97,26 @@ public class CardsChooserListFragment extends ListFragment {
 		startActivity(i);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}
-
+		
+		if (requestCode == REQUEST_FILENAME) {
+			String fileName = data.getStringExtra(CreateCardsPagerActivity.EXTRA_FILENAME);
+			
+			ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
+			adapter.add(fileName);
+			adapter.notifyDataSetChanged();
+		}
+		
 		if (requestCode == REQUEST_CONFIRM_DELETE) {
 			mConfirmDelete = (Boolean) data
 					.getSerializableExtra(DeleteFilesDialogFragment.EXTRA_CONFIRM);
-			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
 			if (mConfirmDelete) {
 				for (int i = adapter.getCount() - 1; i >= 0; i--) {
@@ -128,7 +142,7 @@ public class CardsChooserListFragment extends ListFragment {
 		switch (item.getItemId()) {
 		case R.id.menu_item_create_cards:
 			Intent i = new Intent(getActivity(), CreateCardsPagerActivity.class);
-			startActivity(i);
+			startActivityForResult(i, REQUEST_FILENAME);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
