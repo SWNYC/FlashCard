@@ -15,12 +15,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AnalogClock;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class CardsChooserListFragment extends ListFragment {
 
 	public static final String EXTRA_FILENAME = "com.example.flashcard.filename";
+	public static final String NUM_CHECKED_ITEMS = "com.example.flashcard.num_checked_items";
 	static final int REQUEST_CONFIRM_DELETE = 0;
 	static final int REQUEST_FILENAME = 1;
 	private String[] mFileNames;
@@ -45,6 +47,8 @@ public class CardsChooserListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		ListView listView = getListView();
+		listView.setDivider(getResources().getDrawable(android.R.color.darker_gray));
+		listView.setDividerHeight(10);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
@@ -68,10 +72,14 @@ public class CardsChooserListFragment extends ListFragment {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				if (item.getItemId() == R.id.deleteFileMenuItem) {
-					//TODO
-					//get item count here
+					
+					int checkedItemCount = getListView().getCheckedItemCount();
+					Bundle args = new Bundle();
+					args.putInt(NUM_CHECKED_ITEMS, checkedItemCount);
+					
 					mActionMode = mode;
 					DeleteFilesDialogFragment newFragment = new DeleteFilesDialogFragment();
+					newFragment.setArguments(args);
 					newFragment.setTargetFragment(
 							CardsChooserListFragment.this,
 							REQUEST_CONFIRM_DELETE);

@@ -2,8 +2,10 @@ package com.example.flashcard;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.SparseIntArray;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -24,8 +26,13 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	private ViewPager mViewPager;
 	private FlashCardDatabase mCardDatabase;
 	private CreateCardsFragment mCardFrag;
-	private SparseIntArray pageIndexTracker = new SparseIntArray();
+	@SuppressLint("UseSparseArrays")
+	private HashMap<Integer, Integer> pageIndexTracker = new HashMap<Integer, Integer>();
+	private static final String CURRENT_ITEM = "current_item";
+	private static final String PAGE_TRACKER = "page_index_tracker";
+	private static final String DATABASE = "card_database";
 	public static final String EXTRA_FILENAME = "com.example.flashcard.createcards_filename";
+	private static final String TAG = "SHOW";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,7 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
 		mCardDatabase = new FlashCardDatabase();
-		
+
 		// Create initial empty FlashCard for mViewPager to show.
 		mCardDatabase.getArrayList().add(new FlashCard("", ""));
 		mCardDatabase.setForCircularScrolling();
@@ -96,7 +103,27 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
 		transaction.commit();
-		mViewPager.setCurrentItem(1);
+		if (savedInstanceState == null) {
+			mViewPager.setCurrentItem(1);
+			Log.d(TAG, "currentItemNULL: " + mViewPager.getCurrentItem());
+		}
+
+		if (savedInstanceState != null) {
+			mViewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_ITEM));
+			Log.d(TAG, "currentItemSTATE: " + mViewPager.getCurrentItem());
+			mCardDatabase = (FlashCardDatabase) savedInstanceState.getSerializable(DATABASE);
+			pageIndexTracker = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(PAGE_TRACKER);
+			mViewPager.getAdapter().notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		Log.d(TAG, "currentItemOnSaveInstance: " + mViewPager.getCurrentItem());
+		savedInstanceState.putInt(CURRENT_ITEM, mViewPager.getCurrentItem());
+		savedInstanceState.putSerializable(PAGE_TRACKER, pageIndexTracker);
+		savedInstanceState.putSerializable(DATABASE, mCardDatabase);
 	}
 
 	@Override
@@ -107,18 +134,29 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 
 		if (!question.equals("") && !answer.equals("")) {
 			// Replaces card with new data if same card is added again
-			int value = pageIndexTracker.get(mViewPager.getCurrentItem(), -1);
-			
-			if (value != -1) {
+			Log.d(TAG, "currentItemonAddButton: " + mViewPager.getCurrentItem());
+			Integer value = pageIndexTracker.get(mViewPager.getCurrentItem());
+
+			Log.d(TAG, "value: " + value);
+			if (value != null) {
 				mCardDatabase.getArrayList().set(value, currentCard);
 
-				Toast.makeText(this, "duplicate", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.card_update_confirmation,
+						Toast.LENGTH_SHORT).show();
 			} else {
 				mCardDatabase.getArrayList().add(currentCard);
-				pageIndexTracker.put(mViewPager.getCurrentItem(), mCardDatabase.getArrayList().indexOf(currentCard));
+				pageIndexTracker.put(mViewPager.getCurrentItem(), mCardDatabase
+						.getArrayList().indexOf(currentCard));
+				Log.d(TAG, "key: " + mViewPager.getCurrentItem() + "/value: "
+						+ mCardDatabase.getArrayList().indexOf(currentCard));
+				Log.d(TAG,
+						"valueaferAdd: "
+								+ pageIndexTracker.get(mViewPager
+										.getCurrentItem()));
 				Toast.makeText(this, R.string.add_card_confirmation,
 						Toast.LENGTH_SHORT).show();
 			}
+
 			mViewPager.getAdapter().notifyDataSetChanged();
 		}
 
@@ -149,9 +187,9 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 				mViewPager.getAdapter().notifyDataSetChanged();
 			}
 		}
-		
+
 		saveToFile(fileName);
-		
+
 		Intent data = new Intent();
 		data.putExtra(EXTRA_FILENAME, fileName);
 		setResult(RESULT_OK, data);

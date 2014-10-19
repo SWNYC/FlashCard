@@ -9,9 +9,9 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:background="@color/white"
         android:ems="10"
+        android:padding="16dp"
         android:gravity="center"
         android:textSize="30sp" />
 

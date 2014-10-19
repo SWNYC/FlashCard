@@ -63,29 +63,31 @@ public final class R {
         public static final int unused_fragment_for_reference=0x7f030008;
     }
     public static final class menu {
-        public static final int cards_chooser_options=0x7f090000;
-        public static final int file_list_item_context=0x7f090001;
+        public static final int cards_chooser_options=0x7f0a0000;
+        public static final int file_list_item_context=0x7f0a0001;
+    }
+    public static final class plurals {
+        public static final int delete_dialog_text=0x7f080000;
     }
     public static final class string {
         public static final int add_button=0x7f070007;
         public static final int add_card_button=0x7f070013;
-        public static final int add_card_confirmation=0x7f07001a;
+        public static final int add_card_confirmation=0x7f070018;
         public static final int answer=0x7f070005;
         public static final int answer_hint=0x7f07000f;
         public static final int app_name=0x7f070000;
         public static final int cancel_dialog_button=0x7f07000c;
+        public static final int card_update_confirmation=0x7f070019;
         public static final int create_cards_button=0x7f070003;
-        public static final int delete_dialog_multiple=0x7f070016;
-        public static final int delete_dialog_single=0x7f070017;
         public static final int delete_file=0x7f070014;
-        public static final int duplicate_file_name=0x7f07001b;
+        public static final int duplicate_file_name=0x7f07001a;
         public static final int empty_database=0x7f070011;
         public static final int empty_fields_toast=0x7f070010;
         public static final int main_menu=0x7f070001;
         public static final int new_button=0x7f07000d;
-        public static final int new_cards=0x7f07001c;
+        public static final int new_cards=0x7f07001b;
         public static final int next_button=0x7f070008;
-        public static final int no=0x7f070019;
+        public static final int no=0x7f070017;
         public static final int open_cards_button=0x7f070002;
         public static final int previous_button=0x7f070006;
         public static final int question=0x7f070004;
@@ -95,7 +97,7 @@ public final class R {
         public static final int save_dialog_hint=0x7f07000a;
         public static final int saving_empty_database=0x7f070015;
         public static final int show_answer_button=0x7f070012;
-        public static final int yes=0x7f070018;
+        public static final int yes=0x7f070016;
     }
     public static final class style {
         /** 
@@ -119,10 +121,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
+        public static final int AppTheme=0x7f090001;
     }
 }

@@ -15,14 +15,19 @@ import android.view.ViewGroup;
 
 public class ShowCardPagerActivity extends FragmentActivity implements
 		ShowCardsButtonBarFragment.OnShowAnswerButtonClickedListener {
+	private static final String CURRENT_ITEM = "current_item";
+	private static final String ANSWER_VISIBLE = "answer_visible";
 	private ViewPager mViewPager;
 	private String mFileName;
 	private FlashCardDatabase mCardDatabase;
 	private ShowCardsFragment mCardFrag;
+	private boolean answerVisible = false;
+	private static final String TAG = "SHOW";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		setContentView(R.layout.card_pager_fragment);
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
@@ -30,7 +35,6 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 				CardsChooserListFragment.EXTRA_FILENAME);
 
 		mCardDatabase = getDatabase(mFileName);
-		mCardDatabase.printCardsInLog();
 
 		FragmentManager fm = getSupportFragmentManager();
 
@@ -53,6 +57,10 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 					Object object) {
 				if (mCardFrag != object) {
 					mCardFrag = (ShowCardsFragment) object;
+					if (answerVisible) {
+						mCardFrag.showAnswer();
+					}
+					Log.d(TAG, "setPrimaryItem");
 				}
 				super.setPrimaryItem(container, position, object);
 			}
@@ -72,6 +80,7 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 
 					@Override
 					public void onPageScrollStateChanged(int state) {
+						answerVisible = false;
 						if (state == ViewPager.SCROLL_STATE_IDLE) {
 							final int lastPosition = mViewPager.getAdapter()
 									.getCount() - 1;
@@ -89,9 +98,33 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
+		Log.d(TAG, "fm transactions");
 		transaction.commit();
-		mViewPager.setCurrentItem(1);
+		
+		if (savedInstanceState == null) {
+			mViewPager.setCurrentItem(1);
+			Log.d(TAG, "currentItemNullState: " + mViewPager.getCurrentItem());
+		}
+		
+		if (savedInstanceState != null) {
+			mViewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_ITEM));
+			Log.d(TAG, "currentItemSavedState: " + mViewPager.getCurrentItem());
+			if (savedInstanceState.getBoolean(ANSWER_VISIBLE)) {
+				Log.d(TAG, "savedStateAnswerVisible: " + savedInstanceState.getBoolean(ANSWER_VISIBLE));
+				answerVisible = true;
+			}
+		}
 
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		Log.d(TAG, "onSaveInstanceState");
+		Log.d(TAG, "currentItemOnSaveInstance: " + mViewPager.getCurrentItem());
+		savedInstanceState.putBoolean(ANSWER_VISIBLE, mCardFrag.answerVisible());
+		savedInstanceState.putInt(CURRENT_ITEM, mViewPager.getCurrentItem());
+		Log.d(TAG, "answer visibile: " + mCardFrag.answerVisible());
 	}
 
 	private FlashCardDatabase getDatabase(String fileName) {
@@ -120,4 +153,6 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 	public void onButtonClicked() {
 		mCardFrag.showAnswer();
 	}
+	
+	
 }

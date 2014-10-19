@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
@@ -15,8 +16,14 @@ public class DeleteFilesDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		
+		Bundle args = getArguments();
+		int checkedItemCount = args.getInt(CardsChooserListFragment.NUM_CHECKED_ITEMS);
+		Resources res = getResources();
+		
+		String title = res.getQuantityString(R.plurals.delete_dialog_text, checkedItemCount, checkedItemCount);
 
-		builder.setMessage(R.string.delete_dialog_multiple)
+		builder.setMessage(title)
 				.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
 

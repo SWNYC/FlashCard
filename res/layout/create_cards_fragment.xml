@@ -1,24 +1,19 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    android:orientation="vertical" >
 
         <EditText
             android:id="@+id/CreateCardQuestionEditText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_margin="16dp"
+            android:padding="16dp"
             android:background="@color/white"
-            android:ems="10"
             android:gravity="center"
             android:hint="@string/question_hint"
             android:inputType="textMultiLine"
+            android:scrollbars="vertical"
             android:textSize="20sp" />
 
         <EditText
@@ -27,11 +22,10 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
-            android:ems="10"
             android:gravity="center"
             android:hint="@string/answer_hint"
             android:inputType="textMultiLine"
+            android:scrollbars="vertical"
             android:textSize="20sp" />
-    </LinearLayout>
 
-</ScrollView>
+</LinearLayout>

@@ -52,6 +52,13 @@ public class ShowCardsFragment extends Fragment {
 	public void showAnswer(){
 		mTextView.setText(card.getAnswer());
 	}
+	
+	public boolean answerVisible(){
+		if (mTextView.getText().toString().equals(card.getAnswer())) {
+			return true;
+		}
+		return false;
+	}
 
 	public void resetQuestion(){
 		mTextView.setText(card.getQuestion());
