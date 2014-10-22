@@ -5,19 +5,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AnalogClock;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class CardsChooserListFragment extends ListFragment {
 
@@ -39,16 +41,45 @@ public class CardsChooserListFragment extends ListFragment {
 		mFileNames = getActivity().fileList();
 		List<String> fileList = new ArrayList<String>(Arrays.asList(mFileNames));
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+		MyStringAdapter mAdapter = new MyStringAdapter(getActivity(),
 				R.layout.file_list_item, fileList);
-		setListAdapter(adapter);
+		setListAdapter(mAdapter);
+	}
+
+	private class MyStringAdapter extends ArrayAdapter<String> {
+
+		public MyStringAdapter(Context context, int resource,
+				List<String> objects) {
+			super(context, resource, objects);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			if (convertView == null) {
+				convertView = getActivity().getLayoutInflater().inflate(
+						R.layout.file_list_item, null);
+			}
+
+			TextView fileName = (TextView) convertView
+					.findViewById(R.id.fileName);
+			fileName.setText(getItem(position).toString());
+
+			return convertView;
+		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.cards_chooser_list_view, container,
+				false);
+		return v;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		ListView listView = getListView();
-		listView.setDivider(getResources().getDrawable(android.R.color.darker_gray));
-		listView.setDividerHeight(10);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
@@ -72,11 +103,11 @@ public class CardsChooserListFragment extends ListFragment {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				if (item.getItemId() == R.id.deleteFileMenuItem) {
-					
+
 					int checkedItemCount = getListView().getCheckedItemCount();
 					Bundle args = new Bundle();
 					args.putInt(NUM_CHECKED_ITEMS, checkedItemCount);
-					
+
 					mActionMode = mode;
 					DeleteFilesDialogFragment newFragment = new DeleteFilesDialogFragment();
 					newFragment.setArguments(args);
@@ -108,20 +139,20 @@ public class CardsChooserListFragment extends ListFragment {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		
+
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}
-		
+
 		if (requestCode == REQUEST_FILENAME) {
-			String fileName = data.getStringExtra(CreateCardsPagerActivity.EXTRA_FILENAME);
-			
+			String fileName = data
+					.getStringExtra(CreateCardsPagerActivity.EXTRA_FILENAME);
+
 			ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
 			adapter.add(fileName);
 			adapter.notifyDataSetChanged();
 		}
-		
+
 		if (requestCode == REQUEST_CONFIRM_DELETE) {
 			mConfirmDelete = (Boolean) data
 					.getSerializableExtra(DeleteFilesDialogFragment.EXTRA_CONFIRM);

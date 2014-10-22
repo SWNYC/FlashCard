@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class color {
         public static final int aero_blue=0x7f040000;
+        public static final int app_background=0x7f040005;
         public static final int black=0x7f040002;
         public static final int darker_aero_blue=0x7f040004;
         public static final int egg_shell=0x7f040001;
@@ -34,33 +35,38 @@ public final class R {
         public static final int arrow_right=0x7f020002;
         public static final int background_activated=0x7f020003;
         public static final int ic_launcher=0x7f020004;
+        public static final int list_item=0x7f020005;
+        public static final int list_item_border=0x7f020006;
     }
     public static final class id {
         public static final int CreateCardAnswerEditText=0x7f060006;
         public static final int CreateCardQuestionEditText=0x7f060005;
         public static final int addCardButton=0x7f060003;
-        public static final int answerTextView=0x7f06000b;
+        public static final int answerTextView=0x7f06000d;
         public static final int buttonBarFragmentContainer=0x7f060002;
-        public static final int deleteFileMenuItem=0x7f06000d;
-        public static final int fileNameEditText=0x7f060007;
+        public static final int deleteFileMenuItem=0x7f06000f;
+        public static final int fileName=0x7f060007;
+        public static final int fileNameEditText=0x7f060009;
         public static final int fragmentContainer=0x7f060001;
-        public static final int menu_item_create_cards=0x7f06000c;
-        public static final int questionTextView=0x7f06000a;
+        public static final int menu_item_create_cards=0x7f06000e;
+        public static final int questionTextView=0x7f06000c;
         public static final int saveCardsButton=0x7f060004;
-        public static final int showAnswerButton=0x7f060009;
-        public static final int textView=0x7f060008;
+        public static final int showAnswerButton=0x7f06000b;
+        public static final int testString=0x7f060008;
+        public static final int textView=0x7f06000a;
         public static final int viewPager=0x7f060000;
     }
     public static final class layout {
         public static final int activity_fragment=0x7f030000;
         public static final int card_pager_fragment=0x7f030001;
-        public static final int create_cards_button_bar_fragment=0x7f030002;
-        public static final int create_cards_fragment=0x7f030003;
-        public static final int file_list_item=0x7f030004;
-        public static final int save_file_dialog=0x7f030005;
-        public static final int show_card_fragment=0x7f030006;
-        public static final int show_cards_button_bar_fragment=0x7f030007;
-        public static final int unused_fragment_for_reference=0x7f030008;
+        public static final int cards_chooser_list_view=0x7f030002;
+        public static final int create_cards_button_bar_fragment=0x7f030003;
+        public static final int create_cards_fragment=0x7f030004;
+        public static final int file_list_item=0x7f030005;
+        public static final int save_file_dialog=0x7f030006;
+        public static final int show_card_fragment=0x7f030007;
+        public static final int show_cards_button_bar_fragment=0x7f030008;
+        public static final int unused_fragment_for_reference=0x7f030009;
     }
     public static final class menu {
         public static final int cards_chooser_options=0x7f0a0000;

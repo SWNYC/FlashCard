@@ -6,5 +6,6 @@
 	<color name="black">#000000</color>
 	<color name="white">#FFFFFF</color>
 	<color name="darker_aero_blue">#63A0CF</color>
+	<color name="app_background">#D4D8DA</color>
     
 </resources>
