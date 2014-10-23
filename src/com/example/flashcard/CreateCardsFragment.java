@@ -33,10 +33,10 @@ public class CreateCardsFragment extends Fragment {
 		return v;
 	}
 
-	public static CreateCardsFragment newInstance(UUID crimeID,
+	public static CreateCardsFragment newInstance(UUID cardID,
 			FlashCardDatabase database) {
 		Bundle args = new Bundle();
-		args.putSerializable(EXTRA_CARD_ID, crimeID);
+		args.putSerializable(EXTRA_CARD_ID, cardID);
 		args.putSerializable(EXTRA_CARD_DATABASE, database);
 
 		CreateCardsFragment fragment = new CreateCardsFragment();

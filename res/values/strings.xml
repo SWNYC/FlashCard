@@ -10,7 +10,7 @@
     <string name="previous_button">Previous</string>
 	<string name="add_button">Add</string>
 	<string name="next_button">Next</string>
-	<string name="save_dialog">Save to file: </string>
+	<string name="save_dialog">Create a new set of cards : </string>
 	<string name="save_dialog_hint">Enter file name</string>
 	<string name="save_button">Save</string>
 	<string name="cancel_dialog_button">Cancel</string>
@@ -33,4 +33,6 @@
 	<string name="card_update_confirmation">Card udpated</string>
 	<string name="duplicate_file_name">A file already exists with that name. Please enter a different name.</string>
 	<string name="new_cards">New Cards</string>
+	<string name="cards_saved">Cards Saved!</string>
+	<string name="cards_updated">Cards Updated!</string>
 </resources>

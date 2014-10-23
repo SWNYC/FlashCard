@@ -2,6 +2,7 @@ package com.example.flashcard;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.Iterator;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 				CardsChooserListFragment.EXTRA_FILENAME);
 
 		mCardDatabase = getDatabase(mFileName);
-
+		
 		FragmentManager fm = getSupportFragmentManager();
 
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
@@ -102,6 +103,17 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		transaction.commit();
 		
 		if (savedInstanceState == null) {
+			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
+			while (itr.hasNext()) {
+				FlashCard card = itr.next();
+				if (card.getQuestion().equals("")) {
+					itr.remove();
+				}
+			}
+			
+			mCardDatabase.setForCircularScrolling();
+			mViewPager.getAdapter().notifyDataSetChanged();
+			
 			mViewPager.setCurrentItem(1);
 			Log.d(TAG, "currentItemNullState: " + mViewPager.getCurrentItem());
 		}
@@ -114,7 +126,7 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 				answerVisible = true;
 			}
 		}
-
+		
 	}
 	
 	@Override
@@ -143,8 +155,6 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		database.setForCircularScrolling();
 
 		return database;
 	}

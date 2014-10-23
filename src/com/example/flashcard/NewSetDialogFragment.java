@@ -11,11 +11,10 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SaveFileDialogFragment extends DialogFragment {
+public class NewSetDialogFragment extends DialogFragment {
 	public static final String EXTRA_FILENAME = "com.example.flashcard.filename";
 	private String mFileName;
 	private EditText mFileNameEditText;
@@ -53,7 +52,20 @@ public class SaveFileDialogFragment extends DialogFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								
+								mFileName = mFileNameEditText.getText()
+										.toString();
+
+								String[] fileNames = getActivity().fileList();
+								ArrayList<String> fileList = new ArrayList<String>(
+										Arrays.asList(fileNames));
+
+								if (fileList.contains(mFileName)) {
+									Toast.makeText(getActivity(),
+											R.string.duplicate_file_name,
+											Toast.LENGTH_SHORT).show();
+								} else {
+									mListener.onDialogPositiveClick(mFileName);
+								}
 							}
 						})
 				.setNegativeButton(R.string.cancel_dialog_button,
@@ -62,51 +74,12 @@ public class SaveFileDialogFragment extends DialogFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								SaveFileDialogFragment.this.getDialog()
+								NewSetDialogFragment.this.getDialog()
 										.cancel();
 							}
 						});
-		
+
 		return builder.create();
-	}
-	
-	@Override
-	public void onStart()
-	{
-	    super.onStart();   
-	    AlertDialog dialog = (AlertDialog)getDialog();
-	    if(dialog != null)
-	    {
-	        Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
-	        positiveButton.setOnClickListener(new View.OnClickListener()
-	                {
-	                    @Override
-	                    public void onClick(View v)
-	                    {
-	                        Boolean goodFileName = false;
-	                        
-	                        mFileName = mFileNameEditText.getText()
-									.toString();
-
-							String[] fileNames = getActivity().fileList();
-							ArrayList<String> fileList = new ArrayList<String>(
-									Arrays.asList(fileNames));
-
-							if (fileList.contains(mFileName)) {
-								Toast.makeText(getActivity().getApplicationContext(),
-										R.string.duplicate_file_name,
-										Toast.LENGTH_SHORT).show();
-							} else {
-								goodFileName = true;
-							}
-	                        
-	                        if(goodFileName) {
-	                        	mListener.onDialogPositiveClick(mFileName);
-	                            dismiss();
-	                        }
-	                    }
-	                });
-	    }
 	}
 
 }

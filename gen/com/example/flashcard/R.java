@@ -84,6 +84,8 @@ public final class R {
         public static final int app_name=0x7f070000;
         public static final int cancel_dialog_button=0x7f07000c;
         public static final int card_update_confirmation=0x7f070019;
+        public static final int cards_saved=0x7f07001c;
+        public static final int cards_updated=0x7f07001d;
         public static final int create_cards_button=0x7f070003;
         public static final int delete_file=0x7f070014;
         public static final int duplicate_file_name=0x7f07001a;

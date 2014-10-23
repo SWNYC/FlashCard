@@ -26,6 +26,8 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	private ViewPager mViewPager;
 	private FlashCardDatabase mCardDatabase;
 	private CreateCardsFragment mCardFrag;
+	private boolean mFirstSave = true;
+	private String mFileName;
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> pageIndexTracker = new HashMap<Integer, Integer>();
 	private static final String CURRENT_ITEM = "current_item";
@@ -87,6 +89,7 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 					@Override
 					public void onPageScrollStateChanged(int state) {
 						if (state == ViewPager.SCROLL_STATE_IDLE) {
+							Log.d(TAG, "pos: " + mViewPager.getCurrentItem());
 							final int lastPosition = mViewPager.getAdapter()
 									.getCount() - 1;
 							if (mViewPager.getCurrentItem() == lastPosition) {
@@ -95,6 +98,9 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 								mViewPager.setCurrentItem(lastPosition - 1,
 										false);
 							}
+							Log.d(TAG,
+									"posafterswitch: "
+											+ mViewPager.getCurrentItem());
 						}
 					}
 				});
@@ -105,14 +111,14 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		transaction.commit();
 		if (savedInstanceState == null) {
 			mViewPager.setCurrentItem(1);
-			Log.d(TAG, "currentItemNULL: " + mViewPager.getCurrentItem());
 		}
 
 		if (savedInstanceState != null) {
 			mViewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_ITEM));
-			Log.d(TAG, "currentItemSTATE: " + mViewPager.getCurrentItem());
-			mCardDatabase = (FlashCardDatabase) savedInstanceState.getSerializable(DATABASE);
-			pageIndexTracker = (HashMap<Integer, Integer>) savedInstanceState.getSerializable(PAGE_TRACKER);
+			mCardDatabase = (FlashCardDatabase) savedInstanceState
+					.getSerializable(DATABASE);
+			pageIndexTracker = (HashMap<Integer, Integer>) savedInstanceState
+					.getSerializable(PAGE_TRACKER);
 			mViewPager.getAdapter().notifyDataSetChanged();
 		}
 	}
@@ -134,10 +140,8 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 
 		if (!question.equals("") && !answer.equals("")) {
 			// Replaces card with new data if same card is added again
-			Log.d(TAG, "currentItemonAddButton: " + mViewPager.getCurrentItem());
 			Integer value = pageIndexTracker.get(mViewPager.getCurrentItem());
 
-			Log.d(TAG, "value: " + value);
 			if (value != null) {
 				mCardDatabase.getArrayList().set(value, currentCard);
 
@@ -147,12 +151,6 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 				mCardDatabase.getArrayList().add(currentCard);
 				pageIndexTracker.put(mViewPager.getCurrentItem(), mCardDatabase
 						.getArrayList().indexOf(currentCard));
-				Log.d(TAG, "key: " + mViewPager.getCurrentItem() + "/value: "
-						+ mCardDatabase.getArrayList().indexOf(currentCard));
-				Log.d(TAG,
-						"valueaferAdd: "
-								+ pageIndexTracker.get(mViewPager
-										.getCurrentItem()));
 				Toast.makeText(this, R.string.add_card_confirmation,
 						Toast.LENGTH_SHORT).show();
 			}
@@ -169,8 +167,14 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	@Override
 	public void onSaveButtonClicked() {
 		if (mCardDatabase.getArrayList().size() > 3) {
-			SaveFileDialogFragment newFragment = new SaveFileDialogFragment();
-			newFragment.show(getSupportFragmentManager(), "savefile");
+			if (!mFirstSave) {
+				saveToFile(mFileName);
+				Toast.makeText(getApplicationContext(), R.string.cards_updated,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				SaveFileDialogFragment newFragment = new SaveFileDialogFragment();
+				newFragment.show(getSupportFragmentManager(), "savefile");
+			}
 		} else {
 			Toast.makeText(this, R.string.saving_empty_database,
 					Toast.LENGTH_SHORT).show();
@@ -179,16 +183,12 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 
 	@Override
 	public void onDialogPositiveClick(String fileName) {
-		Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
-		while (itr.hasNext()) {
-			FlashCard card = itr.next();
-			if (card.getQuestion().equals("")) {
-				itr.remove();
-				mViewPager.getAdapter().notifyDataSetChanged();
-			}
-		}
-
 		saveToFile(fileName);
+
+		Toast.makeText(getApplicationContext(), R.string.cards_saved,
+				Toast.LENGTH_SHORT).show();
+		mFileName = fileName;
+		mFirstSave = false;
 
 		Intent data = new Intent();
 		data.putExtra(EXTRA_FILENAME, fileName);
