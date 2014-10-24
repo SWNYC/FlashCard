@@ -1,7 +1,5 @@
 package com.example.flashcard;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.Iterator;
 
 import android.os.Bundle;
@@ -35,7 +33,7 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		mFileName = (String) getIntent().getSerializableExtra(
 				CardsChooserListFragment.EXTRA_FILENAME);
 
-		mCardDatabase = getDatabase(mFileName);
+		mCardDatabase = FlashCardDatabase.getDatabase(getApplicationContext(), mFileName);
 		
 		FragmentManager fm = getSupportFragmentManager();
 
@@ -103,13 +101,13 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		transaction.commit();
 		
 		if (savedInstanceState == null) {
-			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
-			while (itr.hasNext()) {
-				FlashCard card = itr.next();
-				if (card.getQuestion().equals("")) {
-					itr.remove();
-				}
-			}
+//			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
+//			while (itr.hasNext()) {
+//				FlashCard card = itr.next();
+//				if (card.getQuestion().equals("")) {
+//					itr.remove();
+//				}
+//			}
 			
 			mCardDatabase.setForCircularScrolling();
 			mViewPager.getAdapter().notifyDataSetChanged();
@@ -139,25 +137,6 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		Log.d(TAG, "answer visibile: " + mCardFrag.answerVisible());
 	}
 
-	private FlashCardDatabase getDatabase(String fileName) {
-		FlashCardDatabase database = null;
-
-		FileInputStream fis;
-		ObjectInputStream ois;
-
-		try {
-			fis = openFileInput(fileName);
-			ois = new ObjectInputStream(fis);
-
-			database = (FlashCardDatabase) ois.readObject();
-
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return database;
-	}
 
 	@Override
 	public void onButtonClicked() {

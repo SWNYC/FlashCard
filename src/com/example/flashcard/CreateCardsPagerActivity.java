@@ -195,6 +195,24 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		setResult(RESULT_OK, data);
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+
+		if (!mFirstSave) {
+			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
+			while (itr.hasNext()) {
+				FlashCard card = itr.next();
+				if (card.getQuestion().equals("")) {
+					itr.remove();
+				}
+			}
+			
+			saveToFile(mFileName);
+		}
+
+	}
+
 	private void saveToFile(String fileName) {
 
 		FileOutputStream fos;

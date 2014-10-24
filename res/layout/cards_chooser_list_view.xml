@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     android:orientation="vertical" >
 
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/app_background"
-        android:divider="@color/app_background"
-        android:padding="8dp"
+        android:background="#63A0CF"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:divider="#63A0CF"
         android:dividerHeight="8dp"
-        android:drawSelectorOnTop="false" />
+        android:drawSelectorOnTop="false"
+        android:padding="8dp" />
 
 </LinearLayout>

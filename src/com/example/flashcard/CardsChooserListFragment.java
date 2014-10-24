@@ -1,7 +1,9 @@
 package com.example.flashcard;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -9,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,15 +59,33 @@ public class CardsChooserListFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			String emptyString = "";
 
 			if (convertView == null) {
 				convertView = getActivity().getLayoutInflater().inflate(
 						R.layout.file_list_item, null);
 			}
-
+			String fileString = getItem(position).toString();
 			TextView fileName = (TextView) convertView
 					.findViewById(R.id.fileName);
-			fileName.setText(getItem(position).toString());
+			fileName.setText(fileString);
+			
+			TextView dateCreated = (TextView) convertView.findViewById(R.id.dateCreated);
+			File file = new File(getActivity().getFilesDir(),fileString);
+			
+			Date lastModDate = new Date(file.lastModified());
+			String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", lastModDate).toString();
+			
+			dateCreated.setText(formattedDate);
+			
+			TextView numOfCards = (TextView) convertView.findViewById(R.id.numOfCards);
+			FlashCardDatabase cardsDatabase = FlashCardDatabase.getDatabase(getActivity(), fileString);
+			int databaseSize = cardsDatabase.getArrayList().size();
+			if (databaseSize < 10) {
+				emptyString = "0";
+			}
+			numOfCards.setText(emptyString + cardsDatabase.getArrayList().size());
+			
 
 			return convertView;
 		}

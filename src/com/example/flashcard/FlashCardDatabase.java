@@ -1,9 +1,12 @@
 package com.example.flashcard;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import android.content.Context;
 import android.util.Log;
 
 public class FlashCardDatabase implements Serializable {
@@ -44,5 +47,25 @@ public class FlashCardDatabase implements Serializable {
 		for (FlashCard card : mDatabase) {
 			Log.d(TAG, card.toString());
 		}
+	}
+	
+	public static FlashCardDatabase getDatabase(Context context, String fileName) {
+		FlashCardDatabase database = null;
+
+		FileInputStream fis;
+		ObjectInputStream ois;
+
+		try {
+			fis = context.openFileInput(fileName);
+			ois = new ObjectInputStream(fis);
+
+			database = (FlashCardDatabase) ois.readObject();
+
+			ois.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return database;
 	}
 }
