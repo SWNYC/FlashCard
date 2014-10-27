@@ -1,9 +1,12 @@
 package com.example.flashcard;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ public class CreateCardsButtonBarFragment extends Fragment {
 
 	public interface OnButtonsClickedListener {
 		public void onAddButtonClicked();
+
 		public void onSaveButtonClicked();
 	}
 
@@ -34,19 +38,19 @@ public class CreateCardsButtonBarFragment extends Fragment {
 				mCallback.onAddButtonClicked();
 			}
 		});
-		
+
 		saveCardsButton = (Button) v.findViewById(R.id.saveCardsButton);
 		saveCardsButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mCallback.onSaveButtonClicked();
 			}
 		});
-		
+
 		return v;
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);

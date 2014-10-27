@@ -8,14 +8,17 @@ import java.util.Iterator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -33,6 +36,8 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	private static final String CURRENT_ITEM = "current_item";
 	private static final String PAGE_TRACKER = "page_index_tracker";
 	private static final String DATABASE = "card_database";
+	private static final String IS_FIRST_SAVE = "is_first_save";
+	private static final String FILENAME = "file_name";
 	public static final String EXTRA_FILENAME = "com.example.flashcard.createcards_filename";
 	private static final String TAG = "SHOW";
 
@@ -40,13 +45,19 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.card_pager_fragment);
+		
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			if (NavUtils.getParentActivityName(this) != null) {
+				getActionBar().setDisplayHomeAsUpEnabled(true);
+			}
+		}
+		
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
 		mCardDatabase = new FlashCardDatabase();
-
-		// Create initial empty FlashCard for mViewPager to show.
 		mCardDatabase.getArrayList().add(new FlashCard("", ""));
-		mCardDatabase.setForCircularScrolling();
+		mViewPager.setCurrentItem(1);
 
 		FragmentManager fm = getSupportFragmentManager();
 
@@ -90,17 +101,6 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 					public void onPageScrollStateChanged(int state) {
 						if (state == ViewPager.SCROLL_STATE_IDLE) {
 							Log.d(TAG, "pos: " + mViewPager.getCurrentItem());
-							final int lastPosition = mViewPager.getAdapter()
-									.getCount() - 1;
-							if (mViewPager.getCurrentItem() == lastPosition) {
-								mViewPager.setCurrentItem(1, false);
-							} else if (mViewPager.getCurrentItem() == 0) {
-								mViewPager.setCurrentItem(lastPosition - 1,
-										false);
-							}
-							Log.d(TAG,
-									"posafterswitch: "
-											+ mViewPager.getCurrentItem());
 						}
 					}
 				});
@@ -109,6 +109,7 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
 		transaction.commit();
+
 		if (savedInstanceState == null) {
 			mViewPager.setCurrentItem(1);
 		}
@@ -119,8 +120,11 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 					.getSerializable(DATABASE);
 			pageIndexTracker = (HashMap<Integer, Integer>) savedInstanceState
 					.getSerializable(PAGE_TRACKER);
-			mViewPager.getAdapter().notifyDataSetChanged();
+			mFirstSave = savedInstanceState.getBoolean(IS_FIRST_SAVE);
+			mFileName = savedInstanceState.getString(FILENAME);
 		}
+
+		mViewPager.getAdapter().notifyDataSetChanged();
 	}
 
 	@Override
@@ -130,6 +134,8 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		savedInstanceState.putInt(CURRENT_ITEM, mViewPager.getCurrentItem());
 		savedInstanceState.putSerializable(PAGE_TRACKER, pageIndexTracker);
 		savedInstanceState.putSerializable(DATABASE, mCardDatabase);
+		savedInstanceState.putBoolean(IS_FIRST_SAVE, mFirstSave);
+		savedInstanceState.putString(FILENAME, mFileName);
 	}
 
 	@Override
@@ -148,7 +154,7 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 				Toast.makeText(this, R.string.card_update_confirmation,
 						Toast.LENGTH_SHORT).show();
 			} else {
-				mCardDatabase.getArrayList().add(currentCard);
+				mCardDatabase.getArrayList().add(mViewPager.getCurrentItem(), currentCard);
 				pageIndexTracker.put(mViewPager.getCurrentItem(), mCardDatabase
 						.getArrayList().indexOf(currentCard));
 				Toast.makeText(this, R.string.add_card_confirmation,
@@ -166,40 +172,28 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 
 	@Override
 	public void onSaveButtonClicked() {
-		if (mCardDatabase.getArrayList().size() > 3) {
-			if (!mFirstSave) {
-				saveToFile(mFileName);
-				Toast.makeText(getApplicationContext(), R.string.cards_updated,
-						Toast.LENGTH_SHORT).show();
-			} else {
-				SaveFileDialogFragment newFragment = new SaveFileDialogFragment();
-				newFragment.show(getSupportFragmentManager(), "savefile");
-			}
+		if (!mFirstSave) {
+			saveToFile(mFileName);
 		} else {
-			Toast.makeText(this, R.string.saving_empty_database,
-					Toast.LENGTH_SHORT).show();
+			SaveFileDialogFragment newFragment = new SaveFileDialogFragment();
+			newFragment.show(getSupportFragmentManager(), "savefile");
 		}
+
 	}
 
 	@Override
 	public void onDialogPositiveClick(String fileName) {
 		saveToFile(fileName);
 
-		Toast.makeText(getApplicationContext(), R.string.cards_saved,
-				Toast.LENGTH_SHORT).show();
 		mFileName = fileName;
 		mFirstSave = false;
-
-		Intent data = new Intent();
-		data.putExtra(EXTRA_FILENAME, fileName);
-		setResult(RESULT_OK, data);
 	}
-
+	
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-
-		if (!mFirstSave) {
+	public void onPause() {
+		super.onPause();
+		if (isFinishing() && !mFirstSave) {
+			
 			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
 			while (itr.hasNext()) {
 				FlashCard card = itr.next();
@@ -208,13 +202,28 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 				}
 			}
 			
-			saveToFile(mFileName);
+			if (mCardDatabase.getArrayList().size() != 0) {
+				saveToFile(mFileName);
+			}
+			
 		}
-
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			if (NavUtils.getParentActivityName(this) != null) {
+				NavUtils.navigateUpFromSameTask(this);
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private void saveToFile(String fileName) {
-
+		
 		FileOutputStream fos;
 		ObjectOutputStream os;
 
@@ -226,7 +235,18 @@ public class CreateCardsPagerActivity extends FragmentActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		if (mFirstSave) {
+			Toast.makeText(getApplicationContext(), R.string.cards_saved,
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(getApplicationContext(), R.string.cards_saved,
+					Toast.LENGTH_SHORT).show();
+		}
+		
+		Intent data = new Intent();
+		data.putExtra(EXTRA_FILENAME, fileName);
+		setResult(RESULT_OK, data);
 	}
 
 }

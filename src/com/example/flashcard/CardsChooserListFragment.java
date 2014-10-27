@@ -1,14 +1,17 @@
 package com.example.flashcard;
 
 import java.io.File;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.format.DateFormat;
@@ -40,10 +43,16 @@ public class CardsChooserListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		
 		getActivity().setTitle(R.string.app_name);
+		Log.d(TAG, "onCreate");
 
 		mFileNames = getActivity().fileList();
 		List<String> fileList = new ArrayList<String>(Arrays.asList(mFileNames));
+		
+		for (String fileName: fileList) {
+			Log.d(TAG, fileName);
+		}
 
 		MyStringAdapter mAdapter = new MyStringAdapter(getActivity(),
 				R.layout.file_list_item, fileList);
@@ -77,6 +86,7 @@ public class CardsChooserListFragment extends ListFragment {
 			String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", lastModDate).toString();
 			
 			dateCreated.setText(formattedDate);
+			
 			
 			TextView numOfCards = (TextView) convertView.findViewById(R.id.numOfCards);
 			FlashCardDatabase cardsDatabase = FlashCardDatabase.getDatabase(getActivity(), fileString);
@@ -161,6 +171,10 @@ public class CardsChooserListFragment extends ListFragment {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+//		Log.d(TAG, "resultcode: " + resultCode);
+//		Log.d(TAG, "requestCode: " + requestCode);
+
 
 		if (resultCode != Activity.RESULT_OK) {
 			return;
@@ -169,7 +183,7 @@ public class CardsChooserListFragment extends ListFragment {
 		if (requestCode == REQUEST_FILENAME) {
 			String fileName = data
 					.getStringExtra(CreateCardsPagerActivity.EXTRA_FILENAME);
-
+			
 			ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
 			adapter.add(fileName);
 			adapter.notifyDataSetChanged();

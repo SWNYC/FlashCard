@@ -1,6 +1,6 @@
 package com.example.flashcard;
 
-import java.util.Iterator;
+import com.example.flashcard.R.id;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,8 +35,17 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 
 		mCardDatabase = FlashCardDatabase.getDatabase(getApplicationContext(), mFileName);
 		
+		
 		FragmentManager fm = getSupportFragmentManager();
-
+		
+		ShowCardsButtonBarFragment buttonBar = new ShowCardsButtonBarFragment();
+		CardCounterFragment cardCounter = new CardCounterFragment();
+		
+		FragmentTransaction transaction = fm.beginTransaction();
+		transaction.add(R.id.cardCountFragmentContainer, cardCounter);
+		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
+		transaction.commit();
+		
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 
 			@Override
@@ -89,31 +98,17 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 								mViewPager.setCurrentItem(lastPosition - 1,
 										false);
 							}
+							mCardFrag.resetQuestion();
+							
+							updateCounter();
 						}
-						mCardFrag.resetQuestion();
 					}
 				});
-		ShowCardsButtonBarFragment buttonBar = new ShowCardsButtonBarFragment();
-
-		FragmentTransaction transaction = fm.beginTransaction();
-		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
-		Log.d(TAG, "fm transactions");
-		transaction.commit();
 		
 		if (savedInstanceState == null) {
-//			Iterator<FlashCard> itr = mCardDatabase.getArrayList().iterator();
-//			while (itr.hasNext()) {
-//				FlashCard card = itr.next();
-//				if (card.getQuestion().equals("")) {
-//					itr.remove();
-//				}
-//			}
-			
 			mCardDatabase.setForCircularScrolling();
 			mViewPager.getAdapter().notifyDataSetChanged();
-			
 			mViewPager.setCurrentItem(1);
-			Log.d(TAG, "currentItemNullState: " + mViewPager.getCurrentItem());
 		}
 		
 		if (savedInstanceState != null) {
@@ -124,11 +119,10 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 				answerVisible = true;
 			}
 		}
-		
 	}
 	
 	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		Log.d(TAG, "onSaveInstanceState");
 		Log.d(TAG, "currentItemOnSaveInstance: " + mViewPager.getCurrentItem());
@@ -137,11 +131,23 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		Log.d(TAG, "answer visibile: " + mCardFrag.answerVisible());
 	}
 
-
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		updateCounter();
+	}
+	
 	@Override
 	public void onButtonClicked() {
 		mCardFrag.showAnswer();
 	}
 	
+	private void updateCounter() {
+		CardCounterFragment counter = (CardCounterFragment) getSupportFragmentManager().findFragmentById(R.id.cardCountFragmentContainer);
+		if (counter != null) {
+			counter.updateCount(mViewPager.getCurrentItem(), mCardDatabase.getArrayList().size() - 2);
+		}
+	}
 	
 }
