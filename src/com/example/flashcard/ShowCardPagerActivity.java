@@ -1,7 +1,5 @@
 package com.example.flashcard;
 
-import com.example.flashcard.R.id;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +14,7 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		ShowCardsButtonBarFragment.OnShowAnswerButtonClickedListener {
 	private static final String CURRENT_ITEM = "current_item";
 	private static final String ANSWER_VISIBLE = "answer_visible";
+	private static final String DATABASE = "card_database";
 	private ViewPager mViewPager;
 	private String mFileName;
 	private FlashCardDatabase mCardDatabase;
@@ -33,19 +32,19 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 		mFileName = (String) getIntent().getSerializableExtra(
 				CardsChooserListFragment.EXTRA_FILENAME);
 
-		mCardDatabase = FlashCardDatabase.getDatabase(getApplicationContext(), mFileName);
-		
-		
+		mCardDatabase = FlashCardDatabase.getDatabase(getApplicationContext(),
+				mFileName);
+
 		FragmentManager fm = getSupportFragmentManager();
-		
+
 		ShowCardsButtonBarFragment buttonBar = new ShowCardsButtonBarFragment();
 		CardCounterFragment cardCounter = new CardCounterFragment();
-		
+
 		FragmentTransaction transaction = fm.beginTransaction();
 		transaction.add(R.id.cardCountFragmentContainer, cardCounter);
 		transaction.add(R.id.buttonBarFragmentContainer, buttonBar);
 		transaction.commit();
-		
+
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 
 			@Override
@@ -68,7 +67,6 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 					if (answerVisible) {
 						mCardFrag.showAnswer();
 					}
-					Log.d(TAG, "setPrimaryItem");
 				}
 				super.setPrimaryItem(container, position, object);
 			}
@@ -99,55 +97,65 @@ public class ShowCardPagerActivity extends FragmentActivity implements
 										false);
 							}
 							mCardFrag.resetQuestion();
-							
+
 							updateCounter();
 						}
 					}
 				});
-		
+
 		if (savedInstanceState == null) {
+			Log.d(TAG, "nullState");
 			mCardDatabase.setForCircularScrolling();
-			mViewPager.getAdapter().notifyDataSetChanged();
 			mViewPager.setCurrentItem(1);
 		}
-		
+
 		if (savedInstanceState != null) {
 			mViewPager.setCurrentItem(savedInstanceState.getInt(CURRENT_ITEM));
-			Log.d(TAG, "currentItemSavedState: " + mViewPager.getCurrentItem());
+			Log.d(TAG,
+					"savedInstanceStateItem#: " + mViewPager.getCurrentItem());
 			if (savedInstanceState.getBoolean(ANSWER_VISIBLE)) {
-				Log.d(TAG, "savedStateAnswerVisible: " + savedInstanceState.getBoolean(ANSWER_VISIBLE));
 				answerVisible = true;
 			}
+			mCardDatabase = (FlashCardDatabase) savedInstanceState
+					.getSerializable(DATABASE);
 		}
+
+		mViewPager.getAdapter().notifyDataSetChanged();
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		Log.d(TAG, "onSaveInstanceState");
 		Log.d(TAG, "currentItemOnSaveInstance: " + mViewPager.getCurrentItem());
-		savedInstanceState.putBoolean(ANSWER_VISIBLE, mCardFrag.answerVisible());
+		savedInstanceState
+				.putBoolean(ANSWER_VISIBLE, mCardFrag.answerVisible());
 		savedInstanceState.putInt(CURRENT_ITEM, mViewPager.getCurrentItem());
-		Log.d(TAG, "answer visibile: " + mCardFrag.answerVisible());
+		savedInstanceState.putSerializable(DATABASE, mCardDatabase);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		
+		Log.d(TAG, "onStart: arraylistsize: "
+				+ mCardDatabase.getArrayList().size());
+		Log.d(TAG, "onStart: currentItem: " + mViewPager.getCurrentItem());
 		updateCounter();
+
 	}
-	
+
 	@Override
 	public void onButtonClicked() {
 		mCardFrag.showAnswer();
 	}
-	
+
 	private void updateCounter() {
-		CardCounterFragment counter = (CardCounterFragment) getSupportFragmentManager().findFragmentById(R.id.cardCountFragmentContainer);
+		CardCounterFragment counter = (CardCounterFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.cardCountFragmentContainer);
 		if (counter != null) {
-			counter.updateCount(mViewPager.getCurrentItem(), mCardDatabase.getArrayList().size() - 2);
+			counter.updateCount(mViewPager.getCurrentItem(), mCardDatabase
+					.getArrayList().size() - 2);
 		}
 	}
-	
+
 }
